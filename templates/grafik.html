@@ -1,0 +1,50 @@
+{% include 'header.html' %}
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="row">
+                <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                    <h3 class="font-weight-bold"> Hasil Prediksi Tahun Selanjutnya </h3>
+                </div>
+            </div>
+
+        <div class="main-panel">
+            <div class="content-wrapper">
+                    <h3 align="center"> Perbandingan Nilai Aktual dengan Nilai Prediksi </h3>
+                    <div class="ct-chart ct-perfect-fourth"></div>
+                    <script>
+                      var label = {{ bulan|tojson }}
+                      var value = {{ value|tojson }}
+                      var value2 = {{ value2|tojson }}
+                      var value2 = {{ value2|tojson }}
+
+                      var data = {
+                         labels: label,
+                         series: [value, value2, value2]
+                      };
+                      new Chartist.Line('.ct-chart', data);
+                    </script>
+                    <h4>Keterangan :</h4>
+                    <h5>1. Garis berwarna merah adalah data aktual tahun selanjutnya</h5>
+                    <h5>2. Garis berwarna kuning adalah data hasil prediksi untuk tahun selanjutnya</h5>
+
+
+                <br><br><br>
+                <h3 align="center"> Nilai Percentage Error (PE)</h3>
+                    <div class="ct-chart ct-golden-section" id="chart1"></div>
+                    <script>
+                      var label = {{ bulan|tojson }}
+                      var pe = {{ pe|tojson }}
+                      var pe = {{ pe|tojson }}
+                      new Chartist.Line('#chart1', {
+                        labels: label,
+                        series: [pe, pe]
+                      });
+                      new Chartist.Line('.ct-chart', data);
+                    </script>
+            </div>
+        </div>
+
+        <a class="btn btn-primary" href="/prediksi">Kembali</a>
+    </div>
+
+{% include 'footer.html' %}

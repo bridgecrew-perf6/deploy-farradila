@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sistem Prediksi</title>
+    <link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/login.css">
+</head>
+<body>
+<main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
+    <div class="container">
+      <div class="card login-card">
+          <div class="card-body">
+              <div class="brand-wrapper">
+                  <h2 align="center"> OTP Verification </h2>
+                  <h4 align="center"> Please check the email for the verification </h4>
+              </div>
+            <div class="wrapper fadeInDown" align="center">
+                <div id="formContent" align="center">
+                    <form action="/validate" method="post">
+                        <input type="text" name="otp" align="center"><br><br>
+                        <input class="btn btn-success" type="submit" value="Verify">
+                    </form>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</main>
+</body>
+</html>

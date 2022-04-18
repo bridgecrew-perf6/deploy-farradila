@@ -1,0 +1,164 @@
+{% include 'header.html' %}
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="row">
+                <div class="col-md-12 grid-margin">
+                    <div class="row">
+                        <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                            <h3 class="font-weight-bold">Data-Data Kesiapan Operasional Pesawat Tempur </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="input-group">
+                            <div class="input-group-prepend hover-cursor" id="navbar-search-icon" align="right">
+                                <span class="input-group-text" id="search">
+                                    <i class="icon-search"></i>
+                                </span>
+                            </div>
+
+                            <form action="{{ url_for('dataKesiapan', tahun=variabel) }}">
+                                <input align="right" type="text" class="form-control" id="navbar-search-input" placeholder="Masukkan Tahun Yang Dicari" aria-label="search" aria-describedby="search" name="tahun">
+                            </form>
+
+                            {% if session['role']=="admin" %}
+                            <div class="col-12 col-xl-9" align="right">
+                                <button class="btn btn-dark" data-toggle="modal" data-target="#myModal">
+                                <i class="ti-upload btn-icon-prepend"></i>&nbsp; Tambah Data </button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="table-responsive pt-3">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr align="center">
+                                <th> No. </th>
+                                <th> Tahun </th>
+                                <th> Bulan </th>
+                                <th> Total Aircraft Inventory </th>
+                                <th> Unschedhuled Maintenance </th>
+                                <th> Operational Readiness </th>
+                                {% if session['role']=="admin" %}
+                                <th> Aksi </th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for k in data %}
+                            <tr align="center">
+                               <td>{{ k.0 }}</td>
+                               <td>{{ k.1 }}</td>
+                               <td>{{ k.2 }}</td>
+                               <td>{{ k.3 }}</td>
+                               <td>{{ k.4 }}</td>
+                               <td>{{ k.5 }}</td>
+                               {% if session['role']=="admin" %}
+                               <td>
+                                   <button type="button" class="btn btn-warning btn-rounded btn-icon btn-sm" data-toggle="modal" data-target="#modalEdit{{ k.0 }}">
+                                       <a href="#!"><i class="ti-pencil"></i></a>
+                                   </button>
+                                   <button type="button" class="btn btn-danger btn-rounded btn-icon btn-sm">
+                                       <a href="hapusKesiapan/{{ k.0 }}" onclick="return confirm('Yakin ingin dihapus?')"><i class="ti-trash"></i></a>
+                                   </button>
+                               </td>
+                               {% endif %}
+                            </tr>
+
+                            <div id="modalEdit{{ k.0 }}" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title"> Ubah Data-data Kesiapan </h4>
+                                            <button type="button" class="close" data-dismiss="modal" > &times; &nbsp; </button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <form action="{{ url_for('ubahKesiapan') }}" method="POST">
+                                                <div class="form-group">
+                                                    <label for="tahun">Tahun</label>
+                                                    <input type="hidden" name="id_kesiapan" value="{{ k.0 }}">
+                                                    <input required type="text" class="form-control" name="tahun" value="{{ k.1 }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="bulan">Bulan</label>
+                                                    <input required type="text" class="form-control" name="bulan" value="{{ k.2 }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="nilai_kekuatan">Total Aircraft Infentory</label>
+                                                    <input required type="text" class="form-control" name="nilai_kekuatan" value="{{ k.3 }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="nilai_pemeliharaan">Unschedhuled Maintenance</label>
+                                                    <input required type="text" class="form-control" name="nilai_pemeliharaan" value="{{ k.4 }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="nilai_kesiapan">Operational Readiness</label>
+                                                    <input required type="text" class="form-control" name="nilai_kesiapan" value="{{ k.5 }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-warning">Ubah Data</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="myModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header" align="left">
+                                <h4 class="modal-title">Tambah Data Kesiapan Operasional</h4>
+                                <button type="button" class="close" data-dismiss="modal" > &times; &nbsp; </button>
+                            </div>
+
+                            <div class="modal-body">
+                                <form action="{{ url_for('tambahKesiapan') }}" method="POST">
+                                    <div class="form-group">
+                                        <label for="tahun">Tahun</label>
+                                        <input required type="text" class="form-control" id="tahun" name="tahun">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bulan">Bulan</label>
+                                        <input required type="text" class="form-control" id="bulan" name="bulan">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nilai_kekuatan">Total Aircraft Inventory</label>
+                                        <input required type="text" class="form-control" id="nilai_kekuatan" name="nilai_kekuatan">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nilai_pemeliharaan">Unschedhuled Maintenance</label>
+                                        <input required type="text" class="form-control" id="nilai_pemeliharaan" name="nilai_pemeliharaan">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nilai_kesiapan">Operational Readiness</label>
+                                        <input required type="text" class="form-control" id="nilai_kesiapan" name="nilai_kesiapan">
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-success">Tambah Data</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{% include 'footer.html' %}

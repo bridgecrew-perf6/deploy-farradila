@@ -1,0 +1,95 @@
+{% include 'header.html' %}
+<div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <div class="row">
+                <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                  <h3 class="font-weight-bold"> Perhitungan Metode Regresi Linier Berganda </h3>
+                </div>
+              </div>
+            </div>
+          </div>
+
+            <div class="grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#myModal">Cek Persamaan Per Tahun</button>
+                    <div id="myModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title"> Cek Persamaan Per Tahun </h4>
+                                    <button type="button" class="close" data-dismiss="modal" > &times; &nbsp; </button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <form action="{{ url_for('persamaan', th=th) }}">
+                                        <div class="form-group">
+                                            <label for="tahun">Pilih Tahun Yang Akan Dicari</label>
+                                            <select name="th" id="tahun" class="form-control form-control-sm">
+                                              <option>2016</option>
+                                              <option>2017</option>
+                                              <option>2018</option>
+                                              <option>2019</option>
+                                              <option>2020</option>
+                                              <option>2021</option>
+                                              <option>2022</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-warning">Hitung</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                  <div class="table-responsive pt-3">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr align="center">
+                            <th> No. </th>
+                            <th> Tahun </th>
+                            <th> Bulan </th>
+                            <th> TAI (X1) </th>
+                            <th> UM (X2) </th>
+                            <th> OR (Y) </th>
+                            <th> X1^2 </th>
+                            <th> X1*Y </th>
+                            <th> X2^2 </th>
+                            <th> X2*Y </th>
+                            <th> X1*X2 </th>
+                            <th> Y^2 </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                      {% for p in data %}
+                        <tr align="center">
+                            <td>{{ p.0 }}</td>
+                            <td>{{ p.1 }}</td>
+                            <td>{{ p.2 }}</td>
+                            <td>{{ p.3 }}</td>
+                            <td>{{ p.4 }}</td>
+                            <td>{{ p.5 }}</td>
+                            <td>{{ p.3|int * p.3|int }}</td>
+                            <td>{{ p.3|int * p.5|int }}</td>
+                            <td>{{ p.4|int * p.4|int }}</td>
+                            <td>{{ p.4|int * p.5|int }}</td>
+                            <td>{{ p.3|int * p.4|int }}</td>
+                            <td>{{ p.5|int * p.5|int }}</td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{% include 'footer.html' %}
