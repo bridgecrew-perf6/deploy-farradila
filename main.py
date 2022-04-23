@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, url_for, redirect, flash
+from flask import Flask, render_template, request, session, url_for, redirect
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
@@ -13,6 +13,7 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'db_prediksi'
+app.config['MYSQL_URI'] = 'postgres://bowywplbmzzask:09fbb035ef82bd29d6a8de94af07835e336b57c5a63dec6138a3296ac809e3f2@ec2-52-203-118-49.compute-1.amazonaws.com:5432/dajmlglsa9iu05'
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
