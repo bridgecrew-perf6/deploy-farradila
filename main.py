@@ -10,9 +10,8 @@ app = Flask(__name__)
 app.secret_key = 'prediksi'
 
 app.config['MYSQL_HOST'] = 'sql.promaydo.net'
-app.config['MYSQL_USER'] = 'promaydo_faradila'
+app.config['MYSQL_USERNAME'] = 'promaydo_faradila'
 app.config['MYSQL_PASSWORD'] = 'faradila@123'
-app.config['MYSQL_DB'] = 'db_prediksi'
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
