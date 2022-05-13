@@ -9,11 +9,10 @@ app = Flask(__name__)
 
 app.secret_key = 'prediksi'
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_HOST'] = 'sql.promaydo.net'
+app.config['MYSQL_USER'] = 'promaydo_faradila'
+app.config['MYSQL_PASSWORD'] = 'faradila@123'
 app.config['MYSQL_DB'] = 'db_prediksi'
-app.config['MYSQL_URI'] = 'postgres://bowywplbmzzask:09fbb035ef82bd29d6a8de94af07835e336b57c5a63dec6138a3296ac809e3f2@ec2-52-203-118-49.compute-1.amazonaws.com:5432/dajmlglsa9iu05'
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
@@ -202,6 +201,7 @@ def persamaan():
         thSebelum = int(th)
         query = "SELECT * FROM kesiapan WHERE tahun=" + str(thSebelum)
         query2 = "SELECT * FROM kesiapan WHERE tahun=" + str(th)
+
     curl = mysql.connection.cursor()
     curl.execute(query)
     kesiapanData = curl.fetchall()
@@ -239,6 +239,94 @@ def persamaan():
     a = (Y / n) - b1 * (X1 / n) - b2 * (X2 / n)
 
     return render_template('persamaan.html', data=kesiapanData2, a=a, b1=b1, b2=b2, tahun=th, data2=kesiapanData)
+
+@app.route('/modelTerbaik')
+def modelTerbaik():
+    th = request.args.get('th')
+    query = "SELECT * FROM kesiapan WHERE tahun=2019"
+    query2 = "SELECT * FROM kesiapan WHERE tahun=2023"
+
+    curl = mysql.connection.cursor()
+    curl.execute(query)
+    kesiapanData = curl.fetchall()
+    curl.execute(query2)
+    kesiapanData2 = curl.fetchall()
+    curl.close()
+
+    n = len(kesiapanData)
+    X1 = sum(c[3] for c in kesiapanData)
+    X2 = sum(c[4] for c in kesiapanData)
+    Y = sum(c[5] for c in kesiapanData)
+    X1Kuadrat = sum(c[3] * c[3] for c in kesiapanData)
+    X2Kuadrat = sum(c[4] * c[4] for c in kesiapanData)
+    Y2 = sum(c[5] * c[5] for c in kesiapanData)
+    X1X2 = sum(c[3] * c[4] for c in kesiapanData)
+    X1Y = sum(c[3] * c[5] for c in kesiapanData)
+    X2Y = sum(c[4] * c[5] for c in kesiapanData)
+
+    x1Kuadrat = X1Kuadrat - ((X1 * X1) / n)
+    x2Kuadrat = X2Kuadrat - ((X2 * X2) / n)
+    yKuadrat = Y2 - ((Y * Y) / n)
+    x1y = X1Y - ((X1 * Y) / n)
+    x2y = X2Y - ((X2 * Y) / n)
+    x1x2 = X1X2 - ((X1 * X2) / n)
+
+    # mencari nilai b1
+    tempB1 = ((x2Kuadrat * x1y) - (x1x2 * x2y))
+    b1 = tempB1 / ((x1Kuadrat * x2Kuadrat) - (x1x2 * x1x2))
+
+    # mencari nilai b2
+    tempB2 = ((x1Kuadrat * x2y) - (x1x2 * x1y))
+    b2 = tempB2 / ((x1Kuadrat * x2Kuadrat) - (x1x2 * x1x2))
+
+    # mencari nilai a
+    a = (Y / n) - b1 * (X1 / n) - b2 * (X2 / n)
+
+    return render_template('modelTerbaik.html', data=kesiapanData2, a=a, b1=b1, b2=b2, tahun=th, data2=kesiapanData)
+
+@app.route('/modelTerakhir')
+def modelTerakhir():
+    th = request.args.get('th')
+    query = "SELECT * FROM kesiapan WHERE tahun=2022"
+    query2 = "SELECT * FROM kesiapan WHERE tahun=2023"
+
+    curl = mysql.connection.cursor()
+    curl.execute(query)
+    kesiapanData = curl.fetchall()
+    curl.execute(query2)
+    kesiapanData2 = curl.fetchall()
+    curl.close()
+
+    n = len(kesiapanData)
+    X1 = sum(c[3] for c in kesiapanData)
+    X2 = sum(c[4] for c in kesiapanData)
+    Y = sum(c[5] for c in kesiapanData)
+    X1Kuadrat = sum(c[3] * c[3] for c in kesiapanData)
+    X2Kuadrat = sum(c[4] * c[4] for c in kesiapanData)
+    Y2 = sum(c[5] * c[5] for c in kesiapanData)
+    X1X2 = sum(c[3] * c[4] for c in kesiapanData)
+    X1Y = sum(c[3] * c[5] for c in kesiapanData)
+    X2Y = sum(c[4] * c[5] for c in kesiapanData)
+
+    x1Kuadrat = X1Kuadrat - ((X1 * X1) / n)
+    x2Kuadrat = X2Kuadrat - ((X2 * X2) / n)
+    yKuadrat = Y2 - ((Y * Y) / n)
+    x1y = X1Y - ((X1 * Y) / n)
+    x2y = X2Y - ((X2 * Y) / n)
+    x1x2 = X1X2 - ((X1 * X2) / n)
+
+    # mencari nilai b1
+    tempB1 = ((x2Kuadrat * x1y) - (x1x2 * x2y))
+    b1 = tempB1 / ((x1Kuadrat * x2Kuadrat) - (x1x2 * x1x2))
+
+    # mencari nilai b2
+    tempB2 = ((x1Kuadrat * x2y) - (x1x2 * x1y))
+    b2 = tempB2 / ((x1Kuadrat * x2Kuadrat) - (x1x2 * x1x2))
+
+    # mencari nilai a
+    a = (Y / n) - b1 * (X1 / n) - b2 * (X2 / n)
+
+    return render_template('modelTerakhir.html', data=kesiapanData2, a=a, b1=b1, b2=b2, tahun=th, data2=kesiapanData)
 
 @app.route('/grafik')
 def grafik():
@@ -291,6 +379,102 @@ def grafik():
     pe = [((abs(row[5] - abs(a + (b1 * row[3]) + (b2 * row[4]))) / row[5]) * 100) for row in kesiapanData]
 
     return render_template('grafik.html', data=kesiapanData2, a=a, b1=b1, b2=b2, tahun=th, data2=kesiapanData, value=value, bulan=bulan, value2=value2, pe=pe)
+
+@app.route('/grafikModelTerbaik')
+def grafikModelTerbaik():
+    th = request.args.get('th')
+    query = "SELECT * FROM kesiapan WHERE tahun=2019"
+    query2 = "SELECT * FROM kesiapan WHERE tahun=2023"
+
+    curl = mysql.connection.cursor()
+    curl.execute(query)
+    kesiapanData = curl.fetchall()
+    curl.execute(query2)
+    kesiapanData2 = curl.fetchall()
+    curl.close()
+
+    n = len(kesiapanData2)
+    X1 = sum(c[3] for c in kesiapanData)
+    X2 = sum(c[4] for c in kesiapanData)
+    Y = sum(c[5] for c in kesiapanData)
+    X1Kuadrat = sum(c[3] * c[3] for c in kesiapanData)
+    X2Kuadrat = sum(c[4] * c[4] for c in kesiapanData)
+    Y2 = sum(c[5] * c[5] for c in kesiapanData)
+    X1X2 = sum(c[3] * c[4] for c in kesiapanData)
+    X1Y = sum(c[3] * c[5] for c in kesiapanData)
+    X2Y = sum(c[4] * c[5] for c in kesiapanData)
+
+    x1Kuadrat = X1Kuadrat - ((X1 * X1) / n)
+    x2Kuadrat = X2Kuadrat - ((X2 * X2) / n)
+    yKuadrat = Y2 - ((Y * Y) / n)
+    x1y = X1Y - ((X1 * Y) / n)
+    x2y = X2Y - ((X2 * Y) / n)
+    x1x2 = X1X2 - ((X1 * X2) / n)
+
+    # mencari nilai b1
+    tempB1 = ((x2Kuadrat * x1y) - (x1x2 * x2y))
+    b1 = tempB1 / ((x1Kuadrat * x2Kuadrat) - (x1x2 * x1x2))
+
+    # mencari nilai b2
+    tempB2 = ((x1Kuadrat * x2y) - (x1x2 * x1y))
+    b2 = tempB2 / ((x1Kuadrat * x2Kuadrat) - (x1x2 * x1x2))
+
+    # mencari nilai a
+    a = (Y / n) - b1 * (X1 / n) - b2 * (X2 / n)
+
+    bulan = [row[2] for row in kesiapanData2]
+    value = [(a + (b1 * row[3]) + (b2 * row[4])) for row in kesiapanData2]
+
+    return render_template('grafikModelTerbaik.html', data=kesiapanData2, a=a, b1=b1, b2=b2, tahun=th, data2=kesiapanData,
+                           value=value, bulan=bulan)
+
+@app.route('/grafikModelTerakhir')
+def grafikModelTerakhir():
+    th = request.args.get('th')
+    query = "SELECT * FROM kesiapan WHERE tahun=2022"
+    query2 = "SELECT * FROM kesiapan WHERE tahun=2023"
+
+    curl = mysql.connection.cursor()
+    curl.execute(query)
+    kesiapanData = curl.fetchall()
+    curl.execute(query2)
+    kesiapanData2 = curl.fetchall()
+    curl.close()
+
+    n = len(kesiapanData2)
+    X1 = sum(c[3] for c in kesiapanData)
+    X2 = sum(c[4] for c in kesiapanData)
+    Y = sum(c[5] for c in kesiapanData)
+    X1Kuadrat = sum(c[3] * c[3] for c in kesiapanData)
+    X2Kuadrat = sum(c[4] * c[4] for c in kesiapanData)
+    Y2 = sum(c[5] * c[5] for c in kesiapanData)
+    X1X2 = sum(c[3] * c[4] for c in kesiapanData)
+    X1Y = sum(c[3] * c[5] for c in kesiapanData)
+    X2Y = sum(c[4] * c[5] for c in kesiapanData)
+
+    x1Kuadrat = X1Kuadrat - ((X1 * X1) / n)
+    x2Kuadrat = X2Kuadrat - ((X2 * X2) / n)
+    yKuadrat = Y2 - ((Y * Y) / n)
+    x1y = X1Y - ((X1 * Y) / n)
+    x2y = X2Y - ((X2 * Y) / n)
+    x1x2 = X1X2 - ((X1 * X2) / n)
+
+    # mencari nilai b1
+    tempB1 = ((x2Kuadrat * x1y) - (x1x2 * x2y))
+    b1 = tempB1 / ((x1Kuadrat * x2Kuadrat) - (x1x2 * x1x2))
+
+    # mencari nilai b2
+    tempB2 = ((x1Kuadrat * x2y) - (x1x2 * x1y))
+    b2 = tempB2 / ((x1Kuadrat * x2Kuadrat) - (x1x2 * x1x2))
+
+    # mencari nilai a
+    a = (Y / n) - b1 * (X1 / n) - b2 * (X2 / n)
+
+    bulan = [row[2] for row in kesiapanData2]
+    value = [(a + (b1 * row[3]) + (b2 * row[4])) for row in kesiapanData2]
+
+    return render_template('grafikModelTerakhir.html', data=kesiapanData2, a=a, b1=b1, b2=b2, tahun=th, data2=kesiapanData,
+                           value=value, bulan=bulan)
 
 @app.route('/pengguna')
 def pengguna():

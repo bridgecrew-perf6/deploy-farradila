@@ -14,28 +14,16 @@
             <div class="grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <div class="input-group">
-                            <div class="input-group-prepend hover-cursor" id="navbar-search-icon" align="right">
-                                <span class="input-group-text" id="search">
-                                    <i class="icon-search"></i>
-                                </span>
-                            </div>
-
-                            <form action="{{ url_for('dataKesiapan', tahun=variabel) }}">
-                                <input align="right" type="text" class="form-control" id="navbar-search-input" placeholder="Masukkan Tahun Yang Dicari" aria-label="search" aria-describedby="search" name="tahun">
-                            </form>
-
-                            {% if session['role']=="admin" %}
-                            <div class="col-12 col-xl-9" align="right">
+                        {% if session['role']=="admin" %}
+                            <div class="col-12 col-xl-9">
                                 <button class="btn btn-dark" data-toggle="modal" data-target="#myModal">
                                 <i class="ti-upload btn-icon-prepend"></i>&nbsp; Tambah Data </button>
                             </div>
                             {% endif %}
-                        </div>
                     </div>
 
                     <div class="table-responsive pt-3">
-                        <table class="table table-striped">
+                        <table id="id" class="display" style="width:100%">
                             <thead>
                             <tr align="center">
                                 <th> No. </th>
@@ -61,12 +49,8 @@
                                <td>{{ k.5 }}</td>
                                {% if session['role']=="admin" %}
                                <td>
-                                   <button type="button" class="btn btn-warning btn-rounded btn-icon btn-sm" data-toggle="modal" data-target="#modalEdit{{ k.0 }}">
-                                       <a href="#!"><i class="ti-pencil"></i></a>
-                                   </button>
-                                   <button type="button" class="btn btn-danger btn-rounded btn-icon btn-sm">
-                                       <a href="hapusKesiapan/{{ k.0 }}" onclick="return confirm('Yakin ingin dihapus?')"><i class="ti-trash"></i></a>
-                                   </button>
+                               <a data-toggle="modal" data-target="#modalEdit{{ k.0 }}"><i class="ti-pencil"></i></a>
+                               <a href="hapusKesiapan/{{ k.0 }}" onclick="return confirm('Yakin ingin dihapus?')"><i class="ti-trash"></i></a>
                                </td>
                                {% endif %}
                             </tr>
