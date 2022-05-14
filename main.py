@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 app.secret_key = 'prediksi'
 
-app.config['MYSQL_HOST'] = 'sql.promaydo.net'
+app.config['MYSQL_HOST'] = 'promaydo.net'
 app.config['MYSQL_USERNAME'] = 'promaydo_faradila'
 app.config['MYSQL_PASSWORD'] = 'faradila@123'
 app.config['MYSQL_DB'] = 'promaydo_faradila'
@@ -78,7 +78,7 @@ def register():
         user = curl.fetchone()
         if user:
             psn = 'Account already exists !'
-        elif not re.match(r'[^@]+@[student]+\.[polinema]+\.[ac]+\.[id]+', email):
+        elif not re.match(r'[^@]+@[^@]+\.[ac]+\.[id]+', email):
             psn = 'Invalid email address! Please use institutional account.'
         elif not re.match(r'[A-Za-z0-9]+', username):
             psn = 'Username must contain only characters and numbers !'
@@ -502,7 +502,7 @@ def tambahPengguna():
         user = curl.fetchone()
         if user:
             psn = 'Account already exists !'
-        elif not re.match(r'[^@]+@[student]+\.[polinema]+\.[ac]+\.[id]+', email):
+        elif not re.match(r'[^@]+@[^@]+\.[ac]+\.[id]+', email):
             psn = 'Invalid email address! Please use institutional account.'
         elif not re.match(r'[A-Za-z0-9]+', username):
             psn = 'Username must contain only characters and numbers !'
